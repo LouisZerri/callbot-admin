@@ -13,7 +13,7 @@ class Restaurant extends Model
         'email',
         'twilio_number',
         'message_accueil',
-        'actif'
+        'actif',
     ];
 
     public function categories()
@@ -24,5 +24,10 @@ class Restaurant extends Model
     public function commandes()
     {
         return $this->hasMany(Commande::class);
+    }
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
     }
 }

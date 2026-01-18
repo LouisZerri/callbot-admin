@@ -10,6 +10,9 @@
         @method('PUT')
         
         <div class="p-8 space-y-6">
+            <!-- Infos restaurant -->
+            <h3 class="font-bold text-lg text-gray-800 border-b pb-2">Informations du restaurant</h3>
+            
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Nom du restaurant</label>
                 <input type="text" name="nom" value="{{ old('nom', $restaurant->nom) }}" required
@@ -32,7 +35,7 @@
                     @error('telephone')<p class="text-red-500 text-sm mt-2">{{ $message }}</p>@enderror
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Email du restaurant</label>
                     <input type="email" name="email" value="{{ old('email', $restaurant->email) }}" required
                         class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
                     @error('email')<p class="text-red-500 text-sm mt-2">{{ $message }}</p>@enderror
@@ -58,13 +61,43 @@
                     class="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                 <label for="actif" class="font-medium text-gray-700">Restaurant actif</label>
             </div>
+
+            <!-- Compte d'accès -->
+            <h3 class="font-bold text-lg text-gray-800 border-b pb-2 pt-4">Compte d'accès</h3>
+            @if($restaurant->users->first())
+            <p class="text-gray-500 text-sm -mt-4">Modifiez les identifiants de connexion</p>
+            @else
+            <p class="text-orange-500 text-sm -mt-4">Aucun compte associé - Remplissez pour en créer un</p>
+            @endif
+
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Nom du gérant</label>
+                <input type="text" name="user_name" value="{{ old('user_name', $restaurant->users->first()?->name) }}" {{ $restaurant->users->first() ? '' : 'required' }} placeholder="Ex: Jean Dupont"
+                    class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                @error('user_name')<p class="text-red-500 text-sm mt-2">{{ $message }}</p>@enderror
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Email de connexion</label>
+                    <input type="email" name="user_email" value="{{ old('user_email', $restaurant->users->first()?->email) }}" {{ $restaurant->users->first() ? '' : 'required' }} placeholder="gerant@restaurant.fr"
+                        class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                    @error('user_email')<p class="text-red-500 text-sm mt-2">{{ $message }}</p>@enderror
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Nouveau mot de passe</label>
+                    <input type="text" name="user_password" placeholder="{{ $restaurant->users->first() ? 'Laisser vide pour ne pas changer' : 'Minimum 6 caractères' }}"
+                        class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                    @error('user_password')<p class="text-red-500 text-sm mt-2">{{ $message }}</p>@enderror
+                </div>
+            </div>
         </div>
 
         <div class="px-8 py-5 bg-gray-50 border-t border-gray-100 flex justify-between items-center">
             <a href="{{ route('admin.restaurants.show', $restaurant) }}" class="text-gray-500 hover:text-gray-700 font-medium">
                 ← Annuler
             </a>
-            <button type="submit" class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-3 rounded-xl font-medium hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg shadow-blue-500/25">
+            <button type="submit" class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-3 rounded-xl font-medium hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg shadow-blue-500/25 cursor-pointer">
                 Enregistrer les modifications
             </button>
         </div>
@@ -78,12 +111,12 @@
             </div>
             <div class="flex-1">
                 <h3 class="text-red-800 font-bold text-lg">Zone danger</h3>
-                <p class="text-red-600 text-sm mt-1 mb-4">Supprimer ce restaurant supprimera également toutes ses catégories, articles et commandes. Cette action est irréversible.</p>
+                <p class="text-red-600 text-sm mt-1 mb-4">Supprimer ce restaurant supprimera également le compte d'accès, le menu et toutes les commandes. Cette action est irréversible.</p>
                 <form action="{{ route('admin.restaurants.destroy', $restaurant) }}" method="POST"
                     onsubmit="return confirm('Êtes-vous absolument sûr de vouloir supprimer ce restaurant ? Cette action est irréversible.')">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="bg-red-600 text-white px-5 py-2.5 rounded-xl font-medium hover:bg-red-700 transition-colors">
+                    <button type="submit" class="bg-red-600 text-white px-5 py-2.5 rounded-xl font-medium hover:bg-red-700 transition-colors cursor-pointer">
                         🗑️ Supprimer définitivement
                     </button>
                 </form>

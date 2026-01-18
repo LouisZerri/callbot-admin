@@ -4,15 +4,9 @@
 @section('subtitle', $restaurant->adresse)
 
 @section('content')
-@if(session('success'))
-<div class="bg-green-50 border border-green-200 text-green-700 px-5 py-4 rounded-xl mb-6 flex items-center gap-3">
-    <span class="text-xl">✅</span>
-    {{ session('success') }}
-</div>
-@endif
 
 <div class="flex gap-8">
-    <!-- Colonne gauche : Infos -->
+    <!-- Colonne gauche : Infos + Comptes -->
     <div class="w-1/3 space-y-6">
         <!-- Card infos -->
         <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
@@ -83,12 +77,11 @@
                     <h3 class="font-bold text-lg">Menu du restaurant</h3>
                     <p class="text-gray-500 text-sm">Gérez les catégories et articles</p>
                 </div>
-                <!-- Formulaire ajout catégorie -->
                 <form action="{{ route('admin.restaurants.addCategorie', $restaurant) }}" method="POST" class="flex gap-2">
                     @csrf
                     <input type="text" name="nom" placeholder="Nouvelle catégorie..." required
                         class="border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-blue-700 transition-colors">
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-blue-700 transition-colors cursor-pointer">
                         + Ajouter
                     </button>
                 </form>
@@ -97,19 +90,8 @@
             <div class="p-6 space-y-6">
                 @forelse($restaurant->categories as $categorie)
                 <div class="border border-gray-200 rounded-2xl overflow-hidden">
-                    <!-- En-tête catégorie -->
                     <div class="bg-gray-50 px-5 py-4 flex justify-between items-center">
                         <div class="flex items-center gap-3">
-                            <span class="text-xl">
-                                @switch($categorie->nom)
-                                    @case('Pizzas') 🍕 @break
-                                    @case('Boissons') 🥤 @break
-                                    @case('Desserts') 🍰 @break
-                                    @case('Pâtes') 🍝 @break
-                                    @case('Salades') 🥗 @break
-                                    @default 📦
-                                @endswitch
-                            </span>
                             <h4 class="font-bold text-gray-800">{{ $categorie->nom }}</h4>
                             <span class="bg-gray-200 text-gray-600 text-xs px-2 py-1 rounded-full">{{ $categorie->articles->count() }} articles</span>
                         </div>
@@ -117,11 +99,10 @@
                             onsubmit="return confirm('Supprimer cette catégorie et tous ses articles ?')">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="text-red-400 hover:text-red-600 text-sm">🗑️ Supprimer</button>
+                            <button type="submit" class="text-red-400 hover:text-red-600 text-sm cursor-pointer">🗑️ Supprimer</button>
                         </form>
                     </div>
 
-                    <!-- Articles -->
                     <div class="divide-y divide-gray-100">
                         @foreach($categorie->articles as $article)
                         <div class="px-5 py-3 flex justify-between items-center hover:bg-gray-50 transition-colors">
@@ -136,21 +117,22 @@
                                 <form action="{{ route('admin.articles.delete', $article) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-gray-300 hover:text-red-500 transition-colors">✕</button>
+                                    <button type="submit" class="text-gray-300 hover:text-red-500 transition-colors cursor-pointer">✕</button>
                                 </form>
                             </div>
                         </div>
                         @endforeach
 
-                        <!-- Formulaire ajout article -->
                         <form action="{{ route('admin.categories.addArticle', $categorie) }}" method="POST" 
-                              class="px-5 py-4 bg-gray-50 flex gap-3">
+                            class="px-5 py-4 bg-gray-50 flex gap-3">
                             @csrf
                             <input type="text" name="nom" placeholder="Nom de l'article" required
                                 class="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="text" name="description" placeholder="Description (optionnel)"
+                                class="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <input type="number" name="prix" placeholder="Prix" step="0.01" required
                                 class="w-24 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <button type="submit" class="bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-900 transition-colors">
+                            <button type="submit" class="bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-900 transition-colors cursor-pointer">
                                 + Article
                             </button>
                         </form>
