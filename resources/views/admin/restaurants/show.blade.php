@@ -7,7 +7,7 @@
 
 <div class="flex gap-8">
     <!-- Colonne gauche : Infos + Comptes -->
-    <div class="w-1/3 space-y-6">
+    <div class="w-1/3 space-y-6 sticky top-0 self-start">
         <!-- Card infos -->
         <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
             <div class="bg-gradient-to-br from-orange-400 to-red-500 p-6 text-white">
@@ -55,7 +55,7 @@
                 @forelse($restaurant->commandes as $commande)
                 <div class="px-6 py-3 flex justify-between items-center">
                     <div>
-                        <p class="text-sm font-medium text-gray-800">{{ $commande->telephone_client }}</p>
+                        <p class="text-sm font-medium text-gray-800">{{ preg_replace('/^33(\d)(\d{2})(\d{2})(\d{2})(\d{2})$/', '+33 $1 $2 $3 $4 $5', $commande->telephone_client) }}</p>
                         <p class="text-xs text-gray-400">{{ $commande->created_at->format('d/m H:i') }}</p>
                     </div>
                     <p class="font-bold text-green-600">{{ number_format($commande->total, 2) }}€</p>

@@ -12,23 +12,30 @@ class CommandeController extends Controller
     // POST /api/commandes
     public function store(Request $request)
     {
+        // Accepte depuis query string OU body
+        $twilio_number = $request->query('twilio_number') ?? $request->input('twilio_number');
+        $telephone_client = $request->query('telephone_client') ?? $request->input('telephone_client');
+
+        // Ajoute le + si manquant
+        if ($twilio_number && !str_starts_with($twilio_number, '+')) {
+            $twilio_number = '+' . $twilio_number;
+        }
+
         $validated = $request->validate([
-            'twilio_number' => 'required|string',
-            'telephone_client' => 'required|string',
             'articles' => 'required|array',
             'total' => 'required|numeric',
             'mode' => 'nullable|string'
         ]);
 
-        $restaurant = Restaurant::where('twilio_number', $validated['twilio_number'])->first();
+        $restaurant = Restaurant::where('twilio_number', $twilio_number)->first();
 
         if (!$restaurant) {
-            return response()->json(['error' => 'Restaurant non trouvé'], 404);
+            return response()->json(['error' => 'Restaurant non trouvé', 'twilio_number' => $twilio_number], 404);
         }
 
         $commande = Commande::create([
             'restaurant_id' => $restaurant->id,
-            'telephone_client' => $validated['telephone_client'],
+            'telephone_client' => $telephone_client,
             'articles' => $validated['articles'],
             'total' => $validated['total'],
             'mode' => $validated['mode'] ?? null,
