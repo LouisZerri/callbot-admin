@@ -34,6 +34,7 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
 Route::prefix('restaurant')->name('restaurant.')->middleware(['auth', 'restaurant'])->group(function () {
     Route::get('/', [App\Http\Controllers\Restaurant\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/commandes', [App\Http\Controllers\Restaurant\DashboardController::class, 'commandes'])->name('commandes');
+    Route::get('/commandes/{commande}', [App\Http\Controllers\Restaurant\DashboardController::class, 'showCommande'])->name('commandes.show');
     Route::get('/menu', [App\Http\Controllers\Restaurant\DashboardController::class, 'menu'])->name('menu');
     
     // Gestion menu

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Restaurant;
 use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\Categorie;
+use App\Models\Commande;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -42,6 +43,18 @@ class DashboardController extends Controller
         $commandes = $restaurant->commandes()->latest()->paginate(20);
 
         return view('restaurant.commandes', compact('restaurant', 'commandes'));
+    }
+
+    public function showCommande(Commande $commande)
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        if ($commande->restaurant_id !== $user->restaurant_id) {
+            abort(403, 'Action non autorisée.');
+        }
+
+        return view('restaurant.commande-show', compact('commande'));
     }
 
     public function menu()

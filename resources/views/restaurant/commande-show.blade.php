@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.restaurant')
 
 @section('title', 'Commande #' . $commande->id)
 @section('subtitle', 'Détails de la commande')
@@ -24,13 +24,6 @@
         <div class="p-8 border-b border-gray-100">
             <div class="grid grid-cols-2 gap-6">
                 <div class="bg-gray-50 rounded-xl p-4">
-                    <p class="text-gray-500 text-sm font-medium">Restaurant</p>
-                    <div class="flex items-center gap-2 mt-2">
-                        <span class="text-xl">🍕</span>
-                        <span class="font-bold text-gray-800">{{ $commande->restaurant->nom }}</span>
-                    </div>
-                </div>
-                <div class="bg-gray-50 rounded-xl p-4">
                     <p class="text-gray-500 text-sm font-medium">Client</p>
                     <div class="flex items-center gap-2 mt-2">
                         <span class="text-xl">📞</span>
@@ -49,6 +42,18 @@
                     <div class="flex items-center gap-2 mt-2">
                         <span class="text-xl">🛍️</span>
                         <span class="font-bold text-gray-800">{{ $commande->mode ?? 'Non précisé' }}</span>
+                    </div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                    <p class="text-gray-500 text-sm font-medium">Statut</p>
+                    <div class="flex items-center gap-2 mt-2">
+                        @if($commande->statut === 'nouvelle')
+                            <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">Nouvelle</span>
+                        @elseif($commande->statut === 'en_cours')
+                            <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm font-medium">En cours</span>
+                        @else
+                            <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">Terminée</span>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -80,7 +85,7 @@
     </div>
 
     <div class="mt-6">
-        <a href="{{ route('admin.commandes.index') }}" class="text-blue-600 hover:text-blue-800 font-medium">
+        <a href="{{ route('restaurant.commandes') }}" class="text-blue-600 hover:text-blue-800 font-medium">
             ← Retour aux commandes
         </a>
     </div>
