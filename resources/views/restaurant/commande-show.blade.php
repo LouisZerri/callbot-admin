@@ -71,7 +71,7 @@
                         </span>
                         <span class="font-medium text-gray-800">{{ $article['nom'] ?? $article['article'] ?? 'Article' }}</span>
                     </div>
-                    <span class="font-bold text-lg">{{ number_format($article['prix'] ?? 0, 2) }}€</span>
+                    <span class="font-bold text-lg">{{ number_format($article['prix'] ?? $article['prix_unitaire'] ?? 0, 2) }}€</span>
                 </div>
                 @endforeach
             </div>
